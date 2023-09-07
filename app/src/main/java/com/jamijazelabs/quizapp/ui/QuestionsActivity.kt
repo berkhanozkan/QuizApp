@@ -23,6 +23,7 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var textViewProgress: TextView
     private lateinit var textViewQuestion: TextView
     private lateinit var flagImage: ImageView
+
     private lateinit var textViewOption1: TextView
     private lateinit var textViewOption2: TextView
     private lateinit var textViewOption3: TextView
@@ -30,10 +31,11 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var checkButton: Button
 
-    private val currentPosition = 1
+    private val questionsCounter = 0
     private lateinit var questionList: MutableList<Question>
-
-    private var selectedOptionPosition = 0
+    private var selectedAnswer = 0
+    private lateinit var currentPosition: Question
+    private var answered = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questions)
@@ -64,17 +66,17 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setQuestion() {
-        val question = questionList[currentPosition - 1]
+        val question = questionList[questionsCounter - 1]
         flagImage.setImageResource(question.image)
-        progressBar.progress = currentPosition
-        textViewProgress.text = "$currentPosition/${progressBar.max}"
+        progressBar.progress = questionsCounter
+        textViewProgress.text = "${questionsCounter + 1}/${progressBar.max}"
         textViewQuestion.text = question.question
         textViewOption1.text = question.optionOne
         textViewOption2.text = question.optionTwo
         textViewOption3.text = question.optionThree
         textViewOption4.text = question.optionFour
 
-        if (currentPosition == questionList.size) {
+        if (questionsCounter == questionList.size) {
             checkButton.text = "FINISH"
         } else {
             checkButton.text = "CHECK"
@@ -101,7 +103,7 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun selectedOption(textView: TextView, selectedOptionNumber: Int) {
         resetOptions()
-        selectedOptionPosition = selectedOptionNumber
+
         textView.setTextColor(Color.parseColor("#363a43"))
         textView.setTypeface(textView.typeface, Typeface.BOLD)
         textView.background = ContextCompat.getDrawable(this, R.drawable.selected_option_border_bg)
