@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.jamijazelabs.quizapp.ui.QuestionsActivity
+import com.jamijazelabs.quizapp.utils.Constants
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 //                val intent = Intent(this@MainActivity,QuestionsActivity::class.java)
 //                startActivity(intent)
                 Intent(this@MainActivity, QuestionsActivity::class.java).also {
+                    it.putExtra(Constants.USER_NAME, editTextName.text.toString())
                     startActivity(it)
                     finish()
                 }

@@ -37,12 +37,14 @@
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/txtresult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:text="Your score is 9"
         android:textColor="@color/white"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        tools:text="Your score is 4 / 10"
+        />
 
     <Button
         android:id="@+id/finish_button"
