@@ -13,14 +13,16 @@
         android:theme="@style/Theme.QuizApp"
         tools:targetApi="31">
         <activity
+            android:name=".ui.ResultActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.QuestionsActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.QuizApp.NoActionBar"
-            android:windowSoftInputMode="adjustResize"> <!--  Input alanına tıklandığında klavye açılırken widgetların üste taşınmasını sağlar-->
+            android:windowSoftInputMode="adjustResize"> <!-- Input alanına tıklandığında klavye açılırken widgetların üste taşınmasını sağlar -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

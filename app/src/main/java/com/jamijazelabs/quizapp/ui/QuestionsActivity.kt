@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -15,7 +14,6 @@ import androidx.core.content.ContextCompat
 import com.jamijazelabs.quizapp.R
 import com.jamijazelabs.quizapp.model.Question
 import com.jamijazelabs.quizapp.utils.Constants
-import org.w3c.dom.Text
 
 class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -31,10 +29,10 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var checkButton: Button
 
-    private val questionsCounter = 0
+    private var questionsCounter = 0
     private lateinit var questionList: MutableList<Question>
     private var selectedAnswer = 0
-    private lateinit var currentPosition: Question
+    private lateinit var currentQuestion: Question
     private var answered = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,13 +58,13 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
         questionList = Constants.getQuestions()
         Log.d("Size.", questionList.size.toString())
 
-        setQuestion()
+        showNextQuestion()
 
 
     }
 
-    private fun setQuestion() {
-        val question = questionList[questionsCounter - 1]
+    private fun showNextQuestion() {
+        val question = questionList[questionsCounter]
         flagImage.setImageResource(question.image)
         progressBar.progress = questionsCounter
         textViewProgress.text = "${questionsCounter + 1}/${progressBar.max}"
@@ -76,11 +74,16 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
         textViewOption3.text = question.optionThree
         textViewOption4.text = question.optionFour
 
-        if (questionsCounter == questionList.size) {
-            checkButton.text = "FINISH"
-        } else {
+        if (questionsCounter < questionList.size) {
             checkButton.text = "CHECK"
+            currentQuestion = questionList[questionsCounter]
+        } else {
+            checkButton.text = "FINISH"
         }
+
+        questionsCounter++
+        answered = false
+
     }
 
     private fun resetOptions() {
@@ -94,8 +97,7 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
             option.setTextColor(Color.parseColor("#7A7A8089"))
             option.typeface = Typeface.DEFAULT
             option.background = ContextCompat.getDrawable(
-                this,
-                R.drawable.default_option_border_bg
+                this, R.drawable.default_option_border_bg
             )
         }
     }
@@ -107,6 +109,8 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
         textView.setTextColor(Color.parseColor("#363a43"))
         textView.setTypeface(textView.typeface, Typeface.BOLD)
         textView.background = ContextCompat.getDrawable(this, R.drawable.selected_option_border_bg)
+
+        selectedAnswer = selectedOptionNumber;
     }
 
     override fun onClick(p0: View?) {
@@ -128,10 +132,73 @@ class QuestionsActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             R.id.check_button -> {
-                // Todo
+                if (!answered) {
+                    checkAnswer()
+                } else {
+                    resetOptions()
+                    showNextQuestion()
+                }
+
             }
         }
     }
 
+    private fun checkAnswer() {
+        answered = true
+        Log.d("=========>", selectedAnswer.toString())
+        if (selectedAnswer == currentQuestion.correctAnswer) {
+            highlightAnswer(selectedAnswer, true)
+        } else {
+            highlightAnswer(selectedAnswer, false)
+        }
 
+        checkButton.text = "NEXT"
+        showSolution()
+        selectedAnswer = 0
+    }
+
+    private fun showSolution() {
+        selectedAnswer = currentQuestion.correctAnswer
+        highlightAnswer(selectedAnswer, true)
+    }
+
+    private fun highlightAnswer(answer: Int, isCorrect: Boolean) {
+        when (answer) {
+            1 -> {
+                textViewOption1.background =
+                    ContextCompat.getDrawable(
+                        this,
+                        if (isCorrect) R.drawable.correct_option_border else R.drawable.wrong_option_border
+                    )
+                textViewOption1.setTextColor(Color.WHITE)
+            }
+
+            2 -> {
+                textViewOption2.background =
+                    ContextCompat.getDrawable(
+                        this,
+                        if (isCorrect) R.drawable.correct_option_border else R.drawable.wrong_option_border
+                    )
+                textViewOption2.setTextColor(Color.WHITE)
+            }
+
+            3 -> {
+                textViewOption3.background =
+                    ContextCompat.getDrawable(
+                        this,
+                        if (isCorrect) R.drawable.correct_option_border else R.drawable.wrong_option_border
+                    )
+                textViewOption3.setTextColor(Color.WHITE)
+            }
+
+            4 -> {
+                textViewOption4.background =
+                    ContextCompat.getDrawable(
+                        this,
+                        if (isCorrect) R.drawable.correct_option_border else R.drawable.wrong_option_border
+                    )
+                textViewOption4.setTextColor(Color.WHITE)
+            }
+        }
+    }
 }
